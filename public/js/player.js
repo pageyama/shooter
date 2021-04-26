@@ -60,7 +60,7 @@ class Player extends CircleCollision{
     }
 
     if(code == 32) {
-      const leaser = new Leaser(this.pos.x, this.pos.y, 8, 4, 240, 8);
+      const leaser = new Leaser(this.pos.x, this.pos.y, 8, 4, 240, 12);
       Player.game.leasers.push(leaser);
     }
   }

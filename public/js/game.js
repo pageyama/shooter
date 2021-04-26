@@ -19,10 +19,11 @@ class Game {
     Enemy.screen = this.screen;
     Enemy.game = this;
     this.enemys = [];
-    this.enemys.push(new Enemy(this.screen.width / 2, 0, 12));
 
     this.particleSystem = new ParticleSystem();
 
+    this.spawnCounter = 0;
+    this.kill = 0;
     this.death = 0;
   }
 
@@ -43,6 +44,7 @@ class Game {
           l.isAlive = false;
           e.isAlive = false;
           breakEnemy(e, this.particleSystem);
+          this.kill++;
         }
       }
     }
@@ -72,17 +74,26 @@ class Game {
 
     this.particleSystem.drawAndUpdate();
 
-    //enemy respawn
-    if(this.enemys.length == 0) {
-      this.enemys.push(new Enemy(this.screen.width / 2, -100, 12));
-    }
+    this.spawnEnemy();
 
-    //draw death counter
+    //draw kill and death counter
     push();
     textSize(24);
     fill(220);
-    text('Death Counter: ' + this.death, 10, 40);
+    text('Kill: ' + this.kill, 16, 40);
+    text('Death: ' + this.death, 16, 80);
     pop();
+  }
+
+  spawnEnemy() {
+    this.spawnCounter++;
+    if(this.enemys.length > 2 || this.spawnCounter % 100 != 0) {
+      return;
+    }
+
+    const x = Math.random() * this.screen.width * 0.5 + this.screen.width * 0.25;
+
+    this.enemys.push(new Enemy(x, -100, 12));
   }
 
   keyPressed(code) {

@@ -4,24 +4,24 @@ class Enemy extends CircleCollision {
   static game;
 
   constructor(x, y, r) {
-    super(x, y, r);
+    super(x, y, r, createVector(0, 1));
     this.isAlive = true;
     this.counter = 0;
   }
 
   update() {
-    const  center = Enemy.screen.width / 2;
-    this.pos.x = center + Math.sin(millis() / 1000) * center * 0.8;
-    this.pos.y += 1;
+    super.update();
+
+    this.vel.x = Math.sin(this.counter * 0.05) * 4;
+
     if(this.isOutofScreen()) {
       this.isAlive = false;
     }
 
     this.counter++;
-    if(this.counter > 60) {
+    if(this.counter % 60 == 0) {
       const vel = createVector(0, 3);
       Enemy.game.bullets.push(new Bullet(this.pos.x, this.pos.y, 6, 240, vel));
-      this.counter = 0;
     }
   }
 
