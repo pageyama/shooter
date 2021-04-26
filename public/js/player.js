@@ -1,10 +1,10 @@
 class Player extends CircleCollision{
   static screen;
+  static game;
 
-  constructor(x, y, r, s, game) {
+  constructor(x, y, r, s) {
     super(x, y, r);
     this.speed = s;
-    this.game = game;
 
     const tan = Math.sqrt(3) * this.r;
     this.vertex = [-tan, this.r, tan, this.r, 0, -2 * this.r];
@@ -61,7 +61,7 @@ class Player extends CircleCollision{
 
     if(code == 32) {
       const leaser = new Leaser(this.pos.x, this.pos.y, 8, 4, 240, 8);
-      this.game.leasers.push(leaser);
+      Player.game.leasers.push(leaser);
     }
   }
 

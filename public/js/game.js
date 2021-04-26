@@ -10,6 +10,7 @@ class Game {
     this.leasers = [];
 
     Player.screen = this.screen;
+    Player.game = this;
     this.player = new Player(this.screen.width / 2, 640, 10, 5, this);
 
     Bullet.screen = this.screen;
@@ -20,46 +21,35 @@ class Game {
     this.enemys = [];
     this.enemys.push(new Enemy(this.screen.width / 2, 0, 12));
 
+    this.particleSystem = new ParticleSystem();
+
     this.death = 0;
   }
 
   draw() {
     background(64);
 
-    this.leasers.forEach(l => {
-      l.draw();
-      l.update();
-    });
+    //draw and update
+    this.player.draw();
+    this.player.update();
+    this.enemys.forEach(drawAndUpdate);
+    this.leasers.forEach(drawAndUpdate);
+    this.bullets.forEach(drawAndUpdate);
 
-    this.enemys.forEach(e => {
-      e.draw();
-      e.update();
-    });
-
+    //collision detection
     for(let l of this.leasers) {
       for(let e of this.enemys) {
         if(e.isCollidedWithPoint(l.pos)) {
           l.isAlive = false;
           e.isAlive = false;
+          breakEnemy(e, this.particleSystem);
         }
       }
     }
 
-    this.leasers = this.leasers.filter(l => l.isAlive);
-    this.enemys = this.enemys.filter(e => e.isAlive);
-
-    this.bullets.forEach(b => {
-      b.draw();
-      b.update();
-    });
-
-    this.bullets = this.bullets.filter(b => b.isAlive);
-
-    this.player.draw();
-    this.player.update();
-
     for(let b of this.bullets) {
       if(this.player.isCollidedWithCircle(b)) {
+        b.isAlive = false;
         this.player.isAlive = false;
       }
     }
@@ -70,17 +60,24 @@ class Game {
       }
     }
 
+    //fiter dead actor
+    this.leasers = this.leasers.filter(isAlive);
+    this.enemys = this.enemys.filter(isAlive);
+    this.bullets = this.bullets.filter(isAlive);
+
     if(!this.player.isAlive) {
-      this.player.pos.x = this.screen. width / 2;
-      this.player.pos.y = 640;
-      this.player.isAlive = true;
       this.death++;
+      this.player.isAlive = true;
     }
 
+    this.particleSystem.drawAndUpdate();
+
+    //enemy respawn
     if(this.enemys.length == 0) {
       this.enemys.push(new Enemy(this.screen.width / 2, -100, 12));
     }
 
+    //draw death counter
     push();
     textSize(24);
     fill(220);
@@ -96,4 +93,24 @@ class Game {
     this.player.keyReleased(code);
   }
 
+}
+
+function drawAndUpdate(a) {
+  a.draw();
+  a.update();
+}
+
+function isAlive(a) {
+  return a.isAlive;
+}
+
+function breakEnemy(enemy, particleSystem) {
+  const x = enemy.pos.x;
+  const y = enemy.pos.y;
+  for(let i = 0; i < 8; i++) {
+    const vel = createVector(1, 0);
+    vel.rotate(TWO_PI / 8 * i);
+    const p = new SquareParticle(x, y, 32, 3, vel);
+    particleSystem.add(p);
+  }
 }

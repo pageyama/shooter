@@ -1,7 +1,7 @@
 class Bullet extends Actor {
   static screen;
-  constructor(x, y, r, color, speed) {
-    super(x, y, 0, speed);
+  constructor(x, y, r, color, vel) {
+    super(x, y, vel);
     this.r = r;
     this.color = color;
     this.isAlive = true;

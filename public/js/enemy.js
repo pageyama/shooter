@@ -19,7 +19,8 @@ class Enemy extends CircleCollision {
 
     this.counter++;
     if(this.counter > 60) {
-      Enemy.game.bullets.push(new Bullet(this.pos.x, this.pos.y, 6, 240, 3));
+      const vel = createVector(0, 3);
+      Enemy.game.bullets.push(new Bullet(this.pos.x, this.pos.y, 6, 240, vel));
       this.counter = 0;
     }
   }

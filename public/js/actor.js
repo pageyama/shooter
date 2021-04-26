@@ -1,7 +1,11 @@
 class Actor {
-  constructor(x, y, vx = 0, vy = 0) {
+  constructor(x, y, vel) {
     this.pos = createVector(x, y);
-    this.vel = createVector(vx, vy);
+    if(vel == undefined) {
+      this.vel = createVector(0, 0);
+    } else {
+      this.vel = vel;
+    }
   }
 
   update() {

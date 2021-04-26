@@ -1,6 +1,6 @@
 class Leaser extends Actor {
   constructor(x, y, length, weight, color, speed) {
-    super(x, y, 0, -speed);
+    super(x, y, createVector(0, -speed));
     this.length = length;
     this.weight = weight;
     this.color = color;
